@@ -12,7 +12,7 @@ size = {"width": 450, "height": 450}
 
 
 def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
-    return cv2.resize(image, (width, height), interpolation=inter)
+    return cv2.resize(image.astype("uint8"), (width, height), interpolation=inter)
 
 
 def resize_images(images):
