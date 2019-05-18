@@ -7,6 +7,8 @@
     "drizzle-react": "^1.2.0",
     "drizzle-react-components": "^1.2.1",
     "grommet": "^2.7.0",
+    "pigeon-maps": "^0.13.0",
+    "pigeon-marker": "^0.3.4",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.3",
