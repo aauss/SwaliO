@@ -21,6 +21,10 @@
   },
   "homepage": "https://github.com/truffle-box/drizzle-box#readme",
   "dependencies": {
+    "ethers": "^4.0.27",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
     "openzeppelin-solidity": "^2.1.1"
   }
 }
