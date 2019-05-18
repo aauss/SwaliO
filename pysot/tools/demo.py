@@ -14,6 +14,7 @@ from glob import glob
 from pysot.core.config import cfg
 from pysot.models.model_builder import ModelBuilder
 from pysot.tracker.tracker_builder import build_tracker
+from knn_classifier.knn import KNNClassifier
 
 torch.set_num_threads(1)
 
@@ -75,6 +76,8 @@ def main():
     else:
         video_name = 'webcam'
     cv2.namedWindow(video_name, cv2.WND_PROP_FULLSCREEN)
+    clf = KNNClassifier(1)
+    clf.load("/Users/aussabbood/github/SwaliO/pysot/tools/saved_models/model.pkl")
     for frame in get_frames(args.video_name):
         if first_frame:
             try:
@@ -95,7 +98,8 @@ def main():
                 bbox = list(map(int, outputs['bbox']))
                 cv2.rectangle(frame, (bbox[0],bbox[1]),
                         (bbox[0]+bbox[2], bbox[1]+bbox[3]), (0,255,0),3)
-                frame = frame[bbox[1]:(bbox[1]+bbox[3]), bbox[0]:(bbox[0]+bbox[2])]
+                frame_excerpt = frame[bbox[1]:(bbox[1]+bbox[3]), bbox[0]:(bbox[0]+bbox[2])]
+                print(clf.predict(frame_excerpt))
             cv2.imshow(video_name, frame)
             cv2.waitKey(40)
 
