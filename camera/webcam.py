@@ -86,10 +86,11 @@ class Camera:
 
 if __name__ == '__main__':
     class DummyClassifier:
-        def infer(self, input):
+        def predict(self, input):
             return input
-    c = DummyClassifier()
 
+
+    c = DummyClassifier()
 
     cam = Camera(debug=True)
     cam.activate(c)
