@@ -27,6 +27,7 @@
     "ganache-cli": "^6.4.3",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
+    "koa-cors": "0.0.16",
     "koa-router": "^7.4.0",
     "openzeppelin-solidity": "^2.1.1"
   }
