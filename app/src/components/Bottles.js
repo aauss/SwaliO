@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import { Box, Button, Heading, Text } from "grommet";
 
-import { fetchFromEndpoint } from "../helpers/fetch";
+import { fetchFromEndpoint, postToEndpoint } from "../helpers/fetch";
 
-export default ({ loading, onClickDone, address = "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e" }) => {
+export default withRouter(({ history, location }) => {
+  const [loading, setLoading] = useState(false);
   const [reward, setReward] = useState(0);
   const [numberOfBottles, setNumberOfBottles] = useState(0);
   const [balance, setBalance] = useState(0);
+
+  const { address } = location.state;
   
   useEffect(() => {
     async function fetchReward() {
@@ -28,6 +32,15 @@ export default ({ loading, onClickDone, address = "0x00Bd138aBD70e2F00903268F3Db
     }, 1000);
     return () => clearInterval(interval);
   }, [])
+
+  const handleClickDone = async () => {
+    setLoading(true);
+    await postToEndpoint("/end", { address });
+    setTimeout(() => {
+      setLoading(false);
+      history.push("/transaction", { address, totalReward: reward * numberOfBottles })
+    }, 1000);
+  }
 
   return (
     <Box align={"center"} pad={"large"}>
@@ -127,9 +140,9 @@ export default ({ loading, onClickDone, address = "0x00Bd138aBD70e2F00903268F3Db
         color={"accent-1"}
         primary
         margin={"large"}
-        onClick={() => onClickDone()}
+        onClick={handleClickDone}
         disabled={loading}
       />
     </Box>
   )
-}
+});

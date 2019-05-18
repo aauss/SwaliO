@@ -132,7 +132,7 @@ router
     const { address } = ctx.params;
     const balance = (await signer.provider.getBalance(address)).toString();
     ctx.status = 200;
-    ctx.body = balance;
+    ctx.body = ethers.utils.formatEther(balance).toString();
   })
 
 app

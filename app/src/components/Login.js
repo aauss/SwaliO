@@ -1,8 +1,21 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import { Box, Button, Heading, Text, TextInput } from "grommet";
 
-export default ({ loading, onClickGo }) => {
+import { postToEndpoint } from "../helpers/fetch";
+
+export default withRouter(({ history }) => {
+  const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState(null);
+
+  const handleClickGo = async () => {
+    setLoading(true);
+    await postToEndpoint("/start", { address })
+    setTimeout(() => {
+      setLoading(false);
+      history.push("/process", { address })
+    }, 1000);
+  };
 
   return (
     <Box align={"center"} pad={"large"}>
@@ -28,9 +41,9 @@ export default ({ loading, onClickGo }) => {
         color={"accent-1"}
         primary
         margin={"large"}
-        onClick={() => onClickGo(address)}
+        onClick={handleClickGo}
         disabled={loading}
       />
     </Box>
   )
-}
+})
