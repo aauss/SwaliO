@@ -1,13 +1,14 @@
+import pickle
+
 import cv2
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
+
 from knn_classifier.image_loader import load_all_classes
 from knn_classifier.util import extend_list_with_lists
 
 size = {"width": 450, "height": 450}
-
 
 
 def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
@@ -29,8 +30,8 @@ def extract_color_histogram(image, bins=(100, 100, 100)):
 class KNNClassifier:
     def __init__(self, neighbors):
         self.neighbors = neighbors
-        self.model = SVC(kernel='linear')
-        # self.model = KNeighborsClassifier(n_neighbors=neighbors, n_jobs=-1)
+        # self.model = SVC(kernel='linear')
+        self.model = KNeighborsClassifier(n_neighbors=neighbors, n_jobs=-1)
 
     def train(self, training_images, training_labels):
         training_images = [extract_color_histogram(image) for image in resize_images(training_images)]
@@ -40,6 +41,14 @@ class KNNClassifier:
     def predict(self, image):
         image = np.array(extract_color_histogram(resize(image, **size))).reshape(1, -1)
         return self.model.predict(image)
+
+    def save(self):
+        with open("saved_models/model.pkl", "wb") as file:
+            pickle.dump(self.model, file)
+
+    def load(self, path):
+        with open(path, "rb") as file:
+            self.model = pickle.load(file)
 
 
 if __name__ == '__main__':
@@ -63,16 +72,9 @@ if __name__ == '__main__':
     print("White=={}".format(model.predict(white)))
     print("None=={}".format(model.predict(none)))
 
-    # Other test
-    # brown = plt.imread("imgs/brown.jpg")
-    # brown_test = plt.imread("imgs/brownTest.jpg")
-    # white = plt.imread("imgs/white.jpg")
-    # white_test = plt.imread("imgs/white2.jpg")
+    model.save()
+    model.load("saved_models/model.pkl")
 
-    # train = [brown, white]
-    # test = [brown_test, white_test]
-
-    # model = KNNClassifier(1)
-    # model.train(train, ["brown", "white"])
-    # print("Brown=={}".format(model.predict(brown_test)))
-    # print("White=={}".format(model.predict(white_test)))
+    print("Brown=={}".format(model.predict(brown)))
+    print("White=={}".format(model.predict(white)))
+    print("None=={}".format(model.predict(none)))
