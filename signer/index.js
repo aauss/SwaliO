@@ -12,6 +12,7 @@ const app = new Koa();
 const router = new Router();
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+const REWARD_PER_BOTTLE = "0.0001" // ~ 0.02 EUR
 
 console.log(`Signer started on port ${config.port}`);
 
@@ -94,7 +95,9 @@ router
       if (ethers.utils.isHexString(address)) {
         const tx = await contract.functions.rewardCitizen(
           cache.currentAddress,
-          ethers.utils.parseEther("0.01").mul(ethers.utils.bigNumberify(cache.correctBottles)),
+          ethers.utils.parseEther(REWARD_PER_BOTTLE).mul(
+            ethers.utils.bigNumberify(cache.correctBottles)
+          ),
           {
             gasLimit: 100000,
           }
@@ -118,12 +121,18 @@ router
     }
   })
   .get("/bottles", ctx => {
-    if (cache.currentAddress === ZERO_ADDRESS) {
-      ctx.body = "No logged in user";
-      ctx.status = 500;
-    } else {
-      ctx.body = cache.correctBottles
-    }
+    ctx.status = 200
+    ctx.body = cache.correctBottles
+  })
+  .get("/reward", ctx => {
+    ctx.status = 200;
+    ctx.body = REWARD_PER_BOTTLE;
+  })
+  .get("/balance/:address", async ctx => {
+    const { address } = ctx.params;
+    const balance = (await signer.provider.getBalance(address)).toString();
+    ctx.status = 200;
+    ctx.body = balance;
   })
 
 app
