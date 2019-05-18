@@ -68,7 +68,7 @@ class Camera:
             # Draw the text box
             cv2.rectangle(frame, (3, 9), (90, 22), (255, 255, 255), -1)
 
-            classification = classifier.infer(frame)
+            classification = classifier.predict(frame)
             frame = self._imprint_classification(frame, classification)
 
             if self.debug:
