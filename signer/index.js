@@ -5,8 +5,7 @@ const ethers = require("ethers");
 
 const txHandler = require("./txHandler");
 const config = require("./config");
-// TODO: Replace with correct contact
-const contractArtifact = require("../app/src/contracts/ComplexStorage.json");
+const contractArtifact = require("../app/src/contracts/TrashReward.json");
 
 const app = new Koa();
 const router = new Router();
@@ -21,14 +20,22 @@ let cache = {
   incorrectBottles: 0,
 };
 
+let signer;
+let contract;
+
 // Set up ethers
-// const provider = txHandler.getProvider(config.jsonRpcUrl);
-// const signer = txHandler.getSigner(config.privateKey, provider);
-// const contract = txHandler.getContract(
-//   contractArtifact.networks["8995"].address,
-//   contractArtifact.abi,
-//   signer
-// );
+const initEthers = async () => {
+  const provider = txHandler.getProvider(config.jsonRpcUrl);
+  signer = txHandler.getSigner(config.privateKey, provider);
+  const { chainId } = await provider.getNetwork();
+  contract = txHandler.getContract(
+    contractArtifact.networks[chainId].address,
+    contractArtifact.abi,
+    signer
+  );
+}
+
+initEthers();
 
 router
   .post("/start", ctx => {
@@ -80,16 +87,25 @@ router
       ctx.status = 500;
     }
   })
-  .post("/end", ctx => {
+  .post("/end", async ctx => {
     if (ctx.request.body) {
       const { address } = ctx.request.body;
       if (ethers.utils.isHexString(address)) {
+        const tx = await contract.functions.rewardCitizen(
+          cache.currentAddress,
+          ethers.utils.parseEther("0.01").mul(ethers.utils.bigNumberify(cache.correctBottles)),
+          {
+            gasLimit: 100000,
+          }
+        )
+        await tx.wait();
         cache.currentAddress = ZERO_ADDRESS;
         cache.correctBottles = 0;
         cache.incorrectBottles = 0;
         console.log(
           `Address ${address} ends interaction...\n`,
         );
+        ctx.body = tx.hash;
         ctx.status = 200;
       } else {
         ctx.body = "No address given";
@@ -99,7 +115,15 @@ router
       ctx.body = "No body given";
       ctx.status = 500;
     }
-  });
+  })
+  .get("/bottles", ctx => {
+    if (cache.currentAddress === ZERO_ADDRESS) {
+      ctx.body = "No logged in user";
+      ctx.status = 500;
+    } else {
+      ctx.body = cache.correctBottles
+    }
+  })
 
 app
   .use(bodyParser())
