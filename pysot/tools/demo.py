@@ -24,6 +24,7 @@ parser.add_argument('--snapshot', type=str, help='model name')
 parser.add_argument('--video_name', default='', type=str, help='videos or image files')
 args = parser.parse_args()
 
+
 def get_frames(video_name):
     if not video_name:
         cap = cv2.VideoCapture(0)
@@ -53,7 +54,7 @@ def get_frames(video_name):
             yield frame
 
 
-def main():
+def main(threshold_correct, tolerance):
     # load config
     cfg.merge_from_file(args.config)
     cfg.CUDA = torch.cuda.is_available()
@@ -76,6 +77,9 @@ def main():
     else:
         video_name = 'webcam'
     cv2.namedWindow(video_name, cv2.WND_PROP_FULLSCREEN)
+    counter_threshold_correct = 0
+    counter_tolerance = 0
+    previous_color = "none"
     clf = KNNClassifier(1)
     clf.load("/Users/aussabbood/github/SwaliO/pysot/tools/saved_models/model.pkl")
     for frame in get_frames(args.video_name):
@@ -99,9 +103,35 @@ def main():
                 cv2.rectangle(frame, (bbox[0],bbox[1]),
                         (bbox[0]+bbox[2], bbox[1]+bbox[3]), (0,255,0),3)
                 frame_excerpt = frame[bbox[1]:(bbox[1]+bbox[3]), bbox[0]:(bbox[0]+bbox[2])]
-                print(clf.predict(frame_excerpt))
+                try:
+                    pred = clf.predict(frame_excerpt)
+                except cv2.error:
+                    print("[WARNING] Force none due to error!")
+                    pred = ['none']
+                print(pred[0])
+                if pred[0] == previous_color:
+                    counter_threshold_correct += 1
+                else:
+                    counter_tolerance += 1
+                    if counter_tolerance == tolerance:
+                        counter_threshold_correct = 0
+                        counter_tolerance = 0
+                if counter_threshold_correct == 10:
+                    print(f"Its a {pred[0]} bottle")
+                    counter_threshold_correct = 0
+                    counter_tolerance = 0
+                    os.system("{}".format(curl - -data'{"bottleColor": "white", "isCorrectColor": true}' - H "Content-Type: application/json" - X POST 172.16.49.122:8080/bottle))
+
+                previous_color = pred[0]
+                print(f"threshold:{counter_threshold_correct}")
+                print(f"tollerance:{counter_tolerance}")
             cv2.imshow(video_name, frame)
             cv2.waitKey(40)
 
+
+# def threshold(classification):
+#     pass
+
+
 if __name__ == '__main__':
-    main()
+    main(8,5)
