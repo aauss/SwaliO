@@ -120,8 +120,6 @@ def main(threshold_correct, tolerance):
                     print(f"Its a {pred[0]} bottle")
                     counter_threshold_correct = 0
                     counter_tolerance = 0
-                    os.system("{}".format(curl - -data'{"bottleColor": "white", "isCorrectColor": true}' - H "Content-Type: application/json" - X POST 172.16.49.122:8080/bottle))
-
                 previous_color = pred[0]
                 print(f"threshold:{counter_threshold_correct}")
                 print(f"tollerance:{counter_tolerance}")
