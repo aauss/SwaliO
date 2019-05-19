@@ -29,6 +29,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-cors": "0.0.16",
     "koa-router": "^7.4.0",
-    "openzeppelin-solidity": "^2.1.1"
+    "openzeppelin-solidity": "^2.1.1",
+    "react-qr-reader": "^2.2.1"
   }
 }
