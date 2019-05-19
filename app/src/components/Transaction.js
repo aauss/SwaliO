@@ -7,7 +7,6 @@ import { fetchFromEndpoint } from "../helpers/fetch";
 
 export default withRouter(({ history, location }) => {
   const [balance, setBalance] = useState(0);
-  const [loading, setLoading] = useState(false);
 
   const { address, totalReward } = location.state;
   
@@ -43,6 +42,14 @@ export default withRouter(({ history, location }) => {
         <Text size={"large"} align={"center"}>
           to <Text weight={"bold"}>{address}</Text>
         </Text>
+      </Box>
+      <Box
+        width={'medium'}
+        direction={'row'}
+        justify={'between'}
+        margin={{ top: 'small' }}>
+        <Text size={'large'}>New balance</Text>
+        <Text size={'xlarge'}>{`${balance} ETH`}</Text>
       </Box>
       <Button
         label={"OK"}
