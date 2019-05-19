@@ -6,8 +6,8 @@ import QrReader from 'react-qr-reader'
 import { postToEndpoint } from '../helpers/fetch'
 
 export default withRouter(({ history }) => {
-  const [loading, setLoading] = useState(false)
-  const [address, setAddress] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState("");
 
   const handleClickGo = async () => {
     setLoading(true)
