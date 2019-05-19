@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Box, Button, Heading, Text, TextInput } from 'grommet'
 import QrReader from 'react-qr-reader'
+import web3Utils from "web3-utils"
 
 import { postToEndpoint } from '../helpers/fetch'
 
@@ -20,7 +21,7 @@ export default withRouter(({ history }) => {
 
   const handleScan = data => {
     if (data) {
-      const address = data.slice(9)
+      const address = web3Utils.isAddress(data) ? data : data.slice(9)
       setAddress(address)
       handleClickGo()
     }
