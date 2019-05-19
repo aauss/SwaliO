@@ -46,8 +46,6 @@ export default withRouter(({ history, events, pieValues }) => {
     [events]
   )
 
-  console.log(lineData)
-
   return (
     <Box align={'center'} pad={'large'}>
       <PieChart

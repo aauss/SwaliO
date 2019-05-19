@@ -23,7 +23,7 @@ const mapStateToProps = state => {
 
     pieValues = Object.keys(reward_map).map(
       amount =>
-        new Object({
+        ({
           label: Math.ceil(amount * 10000),
           value: Math.ceil((reward_map[amount] / rewards.length) * 100)
         })
