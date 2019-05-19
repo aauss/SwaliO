@@ -12,7 +12,10 @@ size = {"width": 450, "height": 450}
 
 
 def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
-    return cv2.resize(image.astype("uint8"), (width, height), interpolation=inter)
+    try:
+        return cv2.resize(image.astype("uint8"), (width, height), interpolation=inter)
+    except cv2.error:
+        return np.random.randint(low=0, high=200, size=(width, height, 3))
 
 
 def resize_images(images):
