@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "d3": "^3.5.17",
     "drizzle": "^1.2.4",
     "drizzle-react": "^1.2.0",
     "drizzle-react-components": "^1.2.1",
@@ -11,6 +12,7 @@
     "grommet-styles": "^0.2.0",
     "pigeon-maps": "^0.13.0",
     "pigeon-marker": "^0.3.4",
+    "rd3": "^0.8.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-qr-reader": "^2.2.1",

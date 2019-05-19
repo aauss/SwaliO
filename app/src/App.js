@@ -11,6 +11,7 @@ import Login from './components/Login'
 import Bottles from './components/Bottles'
 import Transaction from './components/Transaction'
 import Map from './container/Map'
+import Graphs from './container/Graphs'
 import drizzleOptions from './drizzleOptions'
 
 import logo from './images/logo.png'
@@ -51,11 +52,12 @@ class App extends Component {
   render() {
     return (
       <Grommet theme={grommetTheme} style={baseStyle}>
-        {window.location.pathname !== '/map' && (
-          <div style={imageStyle}>
-            <img src={logo} alt="logo" height="500px" />
-          </div>
-        )}
+        {window.location.pathname !== '/map' &&
+          window.location.pathname !== '/graphs' && (
+            <div style={imageStyle}>
+              <img src={logo} alt="logo" height="500px" />
+            </div>
+          )}
         <DrizzleProvider options={drizzleOptions}>
           <LoadingContainer>
             <Router>
@@ -63,6 +65,7 @@ class App extends Component {
               <Route path="/process/" component={Bottles} />
               <Route path="/transaction/" component={Transaction} />
               <Route path="/map/" component={Map} />
+              <Route path="/graphs/" component={Graphs} />
             </Router>
           </LoadingContainer>
         </DrizzleProvider>

@@ -1,15 +1,18 @@
-import Web3 from "web3";
+import Web3 from 'web3'
 import TrashReward from './contracts/TrashReward.json'
 
 const options = {
   web3: {
-    customProvider: new Web3("http://localhost:8545")
+    customProvider: new Web3('http://localhost:8545')
   },
   events: {
     TrashReward: [
-      'ContainerAdded',
       {
         eventName: 'ContainerAdded',
+        eventOptions: { fromBlock: 0 }
+      },
+      {
+        eventName: 'CitizenRewarded',
         eventOptions: { fromBlock: 0 }
       }
     ]

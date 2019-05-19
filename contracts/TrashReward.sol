@@ -9,6 +9,7 @@ contract TrashReward is Ownable {
 
   event ContainerAdded(address indexed container, int latitude, int longitude);
   event ContainerRemoved(address indexed container);
+  event CitizenRewarded(uint amount);
 
   modifier onlyContainer(){
     require(container_list[msg.sender]);
@@ -35,5 +36,6 @@ contract TrashReward is Ownable {
     require(address(this).balance >= _amount, 'Not enough funds to reward citizen!');
     address payable citizen = address(uint160(_citizen));
     citizen.transfer(_amount);
+    emit CitizenRewarded(_amount);
   }
 }
