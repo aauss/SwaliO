@@ -6,6 +6,5 @@ pyyaml
 yacs
 tqdm
 colorama
-matplotlib
 cython
 tensorboardX
